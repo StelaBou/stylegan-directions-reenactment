@@ -1,0 +1,210 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Finding Directions in GAN’s Latent Space for Neural Face Reenactment</title>
+
+  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Google fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Open+Sans:300italic,400italic,600italic,400,700,300,600" rel="stylesheet" type="text/css">
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+        TeX: { equationNumbers: { autoNumber: "AMS" } },
+        });
+    </script>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <script>
+        function resizeIframe(obj) {
+            obj.style.height = 0;
+            obj.style.height = (obj.contentWindow.document.body.scrollHeight + 5) + 'px';
+        }
+    </script>
+</head>
+
+<body>
+<div class="container">
+
+  <center>
+    <div class="title">Finding Directions in GAN’s Latent Space for Neural Face Reenactment</div>
+  </center>
+
+
+  <!-- Author names --> 
+  <center>
+    <div class="row row-eq-height" style="margin-bottom: 10px">
+      <div class="col-sm-15">
+        <div class="col-sm-4" style="margin-bottom: 10px">
+          <a href="mailto:k2033759@kingston.ac.uk">
+              <div class="author"><span style="font-weight: bolder; color: #444">Stella Bounareli<sup>1</sup></span></div>
+          </a>
+        </div>
+        <div class="col-sm-4" style="margin-bottom: 10px">
+           <a href="mailto:vasileios.argyriou@kingston.ac.uk">
+               <div class="author"><span style="font-weight: bolder; color: #444">Vasileios Argyriou<sup>1</sup></span></div>
+           </a>
+        </div>
+
+        <div class="col-sm-4" style="margin-bottom: 10px">
+          <a href="mailto:g.tzimiropoulos@qmul.ac.uk">
+              <div class="author"><span style="font-weight: bolder; color: #444">Georgios Tzimiropoulos<sup>2</sup></span></div>
+          </a>
+        </div>
+        <div class="col-sm-6" style="margin-bottom: 10px">
+            <a href="https://www.kingston.ac.uk/">
+            <div class="university"><span style="font-weight: normal; color: #444"><sup>1</sup>Kingston Univeristy, London, UK</span></div>
+            </a>
+          </div>
+        <div class="col-sm-6" style="margin-bottom: 10px">
+          <a href="https://www.qmul.ac.uk/">
+          <div class="university"><span style="font-weight: normal; color: #444"><sup>2</sup>Queen Mary Universtity of London, UK</span></div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </center>
+  <br>
+
+  <!-- links to paper 
+  <center>
+    <table class="resource-links">
+      <tr>
+        <td>
+          <a href="">  <!--- TODO add arvix paper link 
+            <img src="images/arxiv.jpg" class="img_links img-responsive">
+            <div class="author">Full Paper</div>
+          </a>
+        </td> ---> 
+		<!--
+        <td>
+          <a href="">
+            <img src="images/gihub.png" class="img_links img-responsive">
+            <div class="author">Source Code</div>
+        </td> --> 
+<!---
+        <td>
+          <a href="citation.txt"> 
+            <img src="images/bib.png" class="img_links img-responsive">
+            <div class="author">BibTeX Citation</div>
+        </td>
+    </table>
+  </center>
+  <br> ---> 
+
+  <!-- Teaser image --> 
+  <center>
+    <table class="image-grid" style="width:100%">
+        <img src="images/teaser.png" style="width: 100%">
+    </table>
+  </center>
+  <div class="container section"></div>
+    <div class="section_title">Abstract</div>
+        <p> 
+            This paper is on face/head reenactment where the goal is to transfer the facial pose 
+            (3D head orientation and expression) of a target face to a source face.
+             Previous methods focus on learning embedding networks for identity and pose disentanglement which proves to be a rather hard task, 
+             degrading the quality of the generated images. We take a different approach, bypassing the training of such networks, 
+             by using (fine-tuned) pre-trained GANs which have been shown capable of producing high-quality facial images. 
+             Because GANs are characterized by weak controllability, the core of our approach is a method to discover which 
+             directions in latent GAN space are responsible for controlling facial pose and expression variations. 
+             We present a simple pipeline to learn such directions with the aid of a 3D shape model which, by construction, 
+             already captures disentangled directions for facial pose, identity and expression. Moreover, we show that by embedding real images 
+             in the GAN latent space, our method can be successfully used for the reenactment of real-world faces. 
+             Our method features several favorable properties including using a single source image (one-shot) and enabling cross-person reenactment. 
+             Our qualitative and quantitative results show that our approach often produces reenacted faces of significantly 
+             higher quality than those produced by state-of-the-art methods for the standard benchmarks of VoxCeleb1 & 2.
+        </p>
+  </div>
+  <br>
+
+  <!-- Overview -->
+  <div class="container section">
+    <div class="section_title">Method</div>
+    <center>
+    <img src="images/net_architecture.png" style="width: 80%">
+    </center>
+    <br>
+    <p>
+        The key idea of our method is to discover disentangled directions in the latent space of a pretrained generator $G$
+        that can be used to control the facial pose (head orientation and expression). To achieve our goal, we describe a simple pipeline that is trained 
+        with the aid of a linear 3D shape model ($\mathrm{Net_{3D}}$) which already contains disentangled directions for facial shape in terms of pose, identity and expression.
+        In more detail, the generated images from random noise vectors $\mathbf{z}_s$ (source) and $\mathbf{z}_t$ (target) are fed 
+        into the $\mathrm{Net_{3D}}$ network to calculate the facial pose parameter vectors $\mathbf{p}_s$ and $\mathbf{p}_t$, 
+        respectively. Given the shift $\Delta \mathbf{w} = \mathbf{A}\Delta \mathbf{p}$, 
+        the new latent code $\mathbf{w}_r = \mathbf{w}_s + \boldsymbol{\Delta}\mathbf{w}$ is used to generate a 
+        reenacted image that has the facial pose of the target face, while maintaining the identity of the source face.
+        The matrix of directions $\mathbf{A}$ is the only trainable module of our architecture. 
+    </p>  
+  </div> 
+
+
+   <!-- Results -->
+  	<div class="container section">
+    	<div class="section_title">Self-Reenactment results</div>
+   		<center>
+        	<video id="teaser" autoplay controls muted loop width="100%">
+            	<source src="images/self_videos.mp4"
+                	type="video/mp4">
+        	</video>
+    	</center>
+    
+	</div>
+	<div class="container section">
+    	<div class="section_title">Cross-Reenactment results</div>
+   		<center>
+        	<video id="teaser" autoplay controls muted loop width="100%">
+            	<source src="images/cross_videos.mp4"
+                	type="video/mp4">
+        	</video>
+    	</center>
+    
+	  </div>  
+	
+	<div class="container section">
+    	<div class="section_title">More results</div>
+   		<center>
+        	<video id="teaser" autoplay controls muted loop width="100%">
+            	<source src="images/results.mp4"
+                	type="video/mp4">
+        	</video>
+    	</center>
+    
+  	</div>  
+	
+
+  <!--
+	<div class="container section">
+		<div class="section_title">Citation</div>
+		<pre>
+	@InProceedings{}</pre>                                
+	  </div> -->
+
+<!-- </div> -->
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+        <div class="content">
+          <p>
+            Website source code is based on the <a href="https://saic-violet.github.io/latent-pose-reenactment/"> Neural Head Reenactment with Latent Pose Descriptors</a>
+          </p>
+        </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>
