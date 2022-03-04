@@ -1,0 +1,6 @@
+@article{bounareli2022finding,
+  title={Finding Directions in GAN's Latent Space for Neural Face Reenactment},
+  author={Bounareli, Stella and Argyriou, Vasileios and Tzimiropoulos, Georgios},
+  journal={arXiv preprint arXiv:2202.00046},
+  year={2022}
+}
